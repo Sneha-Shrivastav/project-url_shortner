@@ -30,9 +30,9 @@ const isValid = (value) => {
     return true;
 }
 
-// const isValidUrl = function(longUrl){
-//     return /^((http(s?)?):\/\/)?([wW]{3}\.)?[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/.test(longUrl)
-// }
+const isValidUrl = function(longUrl){
+    return /^(http(s)?:\/\/)[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(longUrl)
+}
 
 const generateShortUrl = async (req, res) => {
 
@@ -42,9 +42,8 @@ const generateShortUrl = async (req, res) => {
 
         if (!isValid(longUrl)) return res.status(400).send({ status: false, message: "Please enter Url" })
 
-        if (!validUrl.isUri(longUrl)) return res.status(400).send({ status: false, message: "Url is not valid" })
 
-        //if (!isValidUrl(longUrl)) return res.status(400).send({ status: false, message: "Url is not valid" })
+        if (!isValidUrl(longUrl)) return res.status(400).send({ status: false, message: "Url is not valid" })
 
         const presentUrl = await urlModel.findOne({ longUrl }).select({_id:0, longUrl: 1, shortUrl: 1, urlCode: 1 })
 
