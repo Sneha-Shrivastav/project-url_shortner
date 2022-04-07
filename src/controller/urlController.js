@@ -64,7 +64,7 @@ const generateShortUrl = async (req, res) => {
 
         const generatedUrl = await urlModel.create(newUrl)
 
-        await SET_ASYNC(`${newUrl}`, JSON.stringify(newUrl))
+        await SET_ASYNC(`${urlCode}`, JSON.stringify(generatedUrl))
 
         return res.status(201).send({ status: true, data: newUrl })
     }
