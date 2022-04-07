@@ -42,7 +42,6 @@ const generateShortUrl = async (req, res) => {
 
         if (!isValid(longUrl)) return res.status(400).send({ status: false, message: "Please enter Url" })
 
-
         if (!isValidUrl(longUrl)) return res.status(400).send({ status: false, message: "Url is not valid" })
 
         const presentUrl = await urlModel.findOne({ longUrl }).select({_id:0, longUrl: 1, shortUrl: 1, urlCode: 1 })
@@ -64,24 +63,15 @@ const generateShortUrl = async (req, res) => {
         }
 
         const generatedUrl = await urlModel.create(newUrl)
+
+        await SET_ASYNC(`${newUrl}`, JSON.stringify(newUrl))
+
         return res.status(201).send({ status: true, data: newUrl })
     }
     catch (error) {
         res.status(500).send({ msg: error.message })
     }
 }
-
-// const fetchlongUrl = async function (req, res) {
-//     let cahcedUrlData = await GET_ASYNC(`${req.body.longUrl}`)
-//     if(cahcedUrlData) {
-//       res.send(cahcedUrlData)
-//     } else {
-//       let url = await urlModel.findOne({longUrl:req.body.longUrl})//.select({_id:0, longUrl: 1, shortUrl: 1, urlCode: 1 });
-//       await SET_ASYNC(`${req.body.longUrl}`, JSON.stringify(url))
-//       res.send({ data: url });
-//     }
-  
-//   };
 
 //-----------------------------------------------------------------------------------------------------
 
@@ -116,4 +106,3 @@ const getUrl = async (req, res) => {
 
 module.exports.generateShortUrl = generateShortUrl
 module.exports.getUrl = getUrl
-//module.exports.fetchlongUrl = fetchlongUrl
